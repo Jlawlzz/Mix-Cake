@@ -14,6 +14,8 @@ const io = socketIo(server);
 
 let port = process.env.PORT || 3000;
 
+let simpleStore = {}
+
 server.listen(port, function () {
   console.log('Listening on port ' + port + '.');
 });
@@ -27,8 +29,12 @@ io.on('connection', function (socket) {
     console.log('A user has disconnected.', io.engine.clientsCount);
   });
 
-  socket.on('message', function () {
-    console.log('song playing');
+  socket.on('message', function (channel, message) {
+    if(channel === 'playSong'){
+      console.log(`Playing song #${message}`);
+    } else {
+      console.log(`Measurement Taken: ${message[0]}, measurement: ${message[1]}`)
+    }
   });
 });
 
