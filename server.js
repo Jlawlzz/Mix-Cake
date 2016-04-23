@@ -14,6 +14,8 @@ const io = socketIo(server);
 
 let port = process.env.PORT || 3000;
 
+let simpleStore = {}
+
 server.listen(port, function () {
   console.log('Listening on port ' + port + '.');
 });
@@ -27,8 +29,17 @@ io.on('connection', function (socket) {
     console.log('A user has disconnected.', io.engine.clientsCount);
   });
 
-  socket.on('message', function () {
-    console.log('song playing');
+  socket.on('message', function (channel, message) {
+    if(channel === 'songPlay'){
+      console.log(`Playing song #${message}`);
+      simpleStore[`${message}`] = []
+      console.log(simpleStore)
+    } else if (channel === 'measurement'){
+      if(message[1] !== null){ simpleStore[`${message[0]}`].push(message[1]); }
+      console.log(`Measurement Taken: ${message[0]}, measurement: ${message[1]}`)
+    } else {
+      io.sockets.emit('songReport', simpleStore[`${message}`])
+    }
   });
 });
 
