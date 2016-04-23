@@ -1,0 +1,25 @@
+{
+  "name": "cake-mix",
+  "version": "1.0.0",
+  "description": "Music Recognition Interface",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jlawlzz/Mix-Cake.git"
+  },
+  "keywords": [
+    "Music",
+    "Recognition",
+    "Audio"
+  ],
+  "author": "Jlawlzz",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Jlawlzz/Mix-Cake/issues"
+  },
+  "homepage": "https://github.com/Jlawlzz/Mix-Cake#readme"
+}
