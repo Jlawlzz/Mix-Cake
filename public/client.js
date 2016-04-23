@@ -3,7 +3,10 @@
 let socket = io();
 
 let connectionCount = document.getElementById('connection-count');
+let measurementDisplay = document.getElementById('measurements');
 let playSongBut = document.getElementById('play-song');
+let requestMeasurement = document.getElementById('request-measurement');
+
 let id = 257571450
 
 playSongBut.addEventListener('click', function(){
@@ -11,8 +14,16 @@ playSongBut.addEventListener('click', function(){
   socket.send('songPlay', id);
 });
 
+requestMeasurement.addEventListener('click', function(){
+  socket.send('songReport', id);
+});
+
 socket.on('usersConnected', function (count) {
   connectionCount.innerText = 'Connected Users: ' + count;
+});
+
+socket.on('songReport', function (measurements) {
+  measurementDisplay.innerText = measurements
 });
 
 let audio, analyser, source, url;
@@ -92,12 +103,10 @@ let takeMeasurement = function(){
 
       array = [botPeak, botHighPeak, midPeak, midHighPeak, highPeak]
   }
-  console.log(array)
 }
 
 let recordMeasurement = function(){
   socket.send('measurement', [id, array]);
-  // array = [];
   botPeak = 0
   botHighPeak = 0
   midPeak = 0

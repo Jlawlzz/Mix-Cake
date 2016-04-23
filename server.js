@@ -30,10 +30,15 @@ io.on('connection', function (socket) {
   });
 
   socket.on('message', function (channel, message) {
-    if(channel === 'playSong'){
+    if(channel === 'songPlay'){
       console.log(`Playing song #${message}`);
-    } else {
+      simpleStore[`${message}`] = []
+      console.log(simpleStore)
+    } else if (channel === 'measurement'){
+      if(message[1] !== null){ simpleStore[`${message[0]}`].push(message[1]); }
       console.log(`Measurement Taken: ${message[0]}, measurement: ${message[1]}`)
+    } else {
+      io.sockets.emit('songReport', simpleStore[`${message}`])
     }
   });
 });
