@@ -33,6 +33,8 @@ io.on('connection', function (socket) {
   socket.on('message', function(channel, message) {
     if (channel === 'songSearch'){
       SoundCloudHelper.search(message, socket);
+    } else if(channel === 'playSong'){
+      io.sockets.emit('newPlay', message);
     }
   });
 });
