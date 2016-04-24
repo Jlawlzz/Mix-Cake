@@ -2,12 +2,15 @@
 
 const http = require('http');
 const express = require('express');
-
+const analyze = require('./songAnalysis');
 const app = express();
+const loDash = require('lodash');
 
 app.use(express.static('public'));
 
 let server = http.createServer(app);
+let tick
+let tick2
 
 const socketIo = require('socket.io');
 const io = socketIo(server);
@@ -15,6 +18,7 @@ const io = socketIo(server);
 let port = process.env.PORT || 3000;
 
 let simpleStore = {}
+let tempStore = {}
 
 server.listen(port, function () {
   console.log('Listening on port ' + port + '.');
@@ -31,12 +35,42 @@ io.on('connection', function (socket) {
 
   socket.on('message', function (channel, message) {
     if(channel === 'songPlay'){
+      tick = 0
+      console.log(tick)
       console.log(`Playing song #${message}`);
-      simpleStore[`${message}`] = []
-      console.log(simpleStore)
-    } else if (channel === 'measurement'){
-      if(message[1] !== null){ simpleStore[`${message[0]}`].push(message[1]); }
-      console.log(`Measurement Taken: ${message[0]}, measurement: ${message[1]}`)
+      simpleStore[`${message}Ref`] = []
+
+    } else if (channel === 'songGuess'){
+      tick2 = 0
+      tempStore[`${message}Unk`] = []
+
+    } else if (channel === 'measurementRef'){
+      if(message[1] !== null){
+        tick += 1
+        simpleStore[`${message[0]}Ref`].push({ 'time': tick, 'measurement': message[1], 'id': message[0]});
+      }
+
+    } else if (channel === 'measurementUnk'){
+      if(message[1] !== null){
+        tick2 += 1
+        tempStore[`${message[0]}Unk`].push({ 'time': tick2, 'measurement': message[1]});
+      }
+
+    } else if (channel === 'findDiff'){
+
+      let songRefs = loDash.values(simpleStore)
+
+      console.log(songRefs)
+
+      let song = songRefs.filter(function(songRef){
+        let min = loDash.min(analyze(songRef, tempStore[`${message}Unk`]))
+        return (min < 1) && (min > -1)
+      });
+
+      console.log(song)
+
+      io.sockets.emit('match', song);
+
     } else {
       io.sockets.emit('songReport', simpleStore[`${message}`])
     }

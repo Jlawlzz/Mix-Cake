@@ -24,6 +24,7 @@
   "homepage": "https://github.com/Jlawlzz/Mix-Cake#readme",
   "dependencies": {
     "express": "^4.13.4",
+    "lodash": "^4.11.1",
     "socket.io": "^1.4.5"
   }
 }
