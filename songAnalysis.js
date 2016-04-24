@@ -30,7 +30,7 @@ let findDiff = function(ref, unknown) {
     rhsLowDiff = Math.abs(rhs[i]['measurement'][0] - rhs[i + 1]['measurement'][0]);
     rhsLowMedDiff = Math.abs(rhs[i]['measurement'][1] - rhs[i + 1]['measurement'][1]);
     rhsMedDiff = Math.abs(rhs[i]['measurement'][2] - rhs[i + 1]['measurement'][2]);
-    rhsHighMedDiff = Math.abs(rhs[i]['measurement'][3] - rhs[i + 1]['measurement'][3]);
+    rhsHighMedDiff =Math.abs(rhs[i]['measurement'][3] - rhs[i + 1]['measurement'][3]);
     rhsHighDiff = Math.abs(rhs[i]['measurement'][4] - rhs[i + 1]['measurement'][4]);
 
     lhsLowDiff = Math.abs(lhs[i]['measurement'][0] - lhs[i + 1]['measurement'][0]);
@@ -48,8 +48,8 @@ let findDiff = function(ref, unknown) {
   };
 
 
-  console.log([(lowDiffTotal/200), (lowMedDiffTotal/200), (medDiffTotal/200), (highMedDiffTotal/200), (highDiffTotal/200)]);
-  return [(lowDiffTotal/200), (lowMedDiffTotal/200), (medDiffTotal/200), (highMedDiffTotal/200), (highDiffTotal/200)];
+  console.log([((lowDiffTotal)/200), ((lowMedDiffTotal)/200), ((medDiffTotal)/200), ((highMedDiffTotal)/200), ((highDiffTotal)/200)]);
+  return [((lowDiffTotal)/200), ((lowMedDiffTotal)/200), ((medDiffTotal)/200), ((highMedDiffTotal)/200), ((highDiffTotal)/200)];
 }
 
 module.exports = findDiff;
