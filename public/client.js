@@ -5,6 +5,7 @@ let socket = io();
 let connectionCount = document.getElementById('connection-count');
 let searchBar = document.getElementById('search-bar');
 let searchButton = document.getElementById('search-button');
+let seeStoreButton = document.getElementById('see-store-button');
 let searchResults = document.getElementById('search-results');
 let recentlyPlayed = document.getElementById('recently-played');
 
@@ -13,6 +14,10 @@ let song, songChild, button, state, id
 searchButton.addEventListener('click', function(){
   let searchVal = searchBar.value;
   socket.send('songSearch', searchVal);
+});
+
+seeStoreButton.addEventListener('click', function(){
+  socket.send('seeStore');
 });
 
 socket.on('usersConnected', function (count) {
