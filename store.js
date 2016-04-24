@@ -3,7 +3,6 @@
 let redis = require('redis');
 let client = redis.createClient();
 
-
 let Store = function(){
   this.tempStore = {}
   this.currentSong = null
