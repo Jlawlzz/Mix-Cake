@@ -8,7 +8,7 @@ let searchButton = document.getElementById('search-button');
 let searchResults = document.getElementById('search-results');
 let recentlyPlayed = document.getElementById('recently-played');
 
-let song, songChild, button
+let song, songChild, button, state, id
 
 searchButton.addEventListener('click', function(){
   let searchVal = searchBar.value;
@@ -35,8 +35,10 @@ function appendSearchResult(songParams){
   searchResults.appendChild(songChild);
   button = document.getElementById('button' + songParams.id);
   button.addEventListener('click', function(){
+    socket.send('storeSong')
     socket.send('playSong', songParams);
     playSong(songParams.id);
+    state = 'log'
   });
 }
 
@@ -47,6 +49,7 @@ function appendRecentlyPlayed(songParams){
   button = document.getElementById('buttonRecent' + songParams.id);
   button.addEventListener('click', function(){
     playSong(songParams.id);
+    state = 'log'
   });
 }
 
@@ -58,6 +61,7 @@ let playSong = function(trackID){
     context.close()
     context = new webkitAudioContext()
   }
+  id = trackID
   audio = new Audio(), source, url = 'http://api.soundcloud.com/tracks/' + trackID + '/stream' + '?client_id=e6cec03e9db1f86a994857320fa6b7e3';
   audio.crossOrigin = "anonymous";
   audio.src = url;
@@ -67,6 +71,8 @@ let playSong = function(trackID){
   analyser.connect(context.destination);
   setupStream();
   source.mediaElement.play();
+  let metroMeasure = setInterval(takeMeasurement, 1);
+  let metroRecordMeasure = setInterval(recordMeasurement, 20);
 }
 
 let setupStream = function(){
@@ -80,4 +86,61 @@ let setupStream = function(){
   midPeak = 0;
   midHighPeak = 0;
   highPeak = 0;
+}
+
+
+let array;
+let botFreq = 0
+let botHighFreq = 0
+let midFreq = 0
+let midHighFreq = 0
+let highFreq = 0
+
+let takeMeasurement = function(){
+  analyser.getByteFrequencyData(dataArray);
+
+  botFreq = dataArray[6];
+  botHighFreq = dataArray[12];
+  midFreq = dataArray[50];
+  midHighFreq = dataArray[300];
+  highFreq = dataArray[500];
+
+  if ((botPeak < botFreq) && (botFreq != null)){
+      botPeak = botFreq;
+
+      array = [botPeak, botHighPeak, midPeak, midHighPeak, highPeak]
+  }
+
+  if ((botHighPeak < botHighFreq) && (botHighFreq != null)){
+      botHighPeak = botHighFreq;
+
+      array = [botPeak, botHighPeak, midPeak, midHighPeak, highPeak]
+  }
+
+  if ((midPeak < midFreq) && (midFreq != null)){
+      midPeak = midFreq;
+
+      array = [botPeak, botHighPeak, midPeak, midHighPeak, highPeak]
+  }
+
+  if ((midHighPeak < midHighFreq)  && (midHighFreq != null)){
+      midHighPeak = midHighFreq;
+
+      array = [botPeak, botHighPeak, midPeak, midHighPeak, highPeak]
+  }
+
+  if ((highPeak < highFreq) && (highFreq != null)){
+      highPeak = highFreq;
+
+      array = [botPeak, botHighPeak, midPeak, midHighPeak, highPeak]
+  }
+}
+
+let recordMeasurement = function(){
+  socket.send(state, {'id': id, 'fft': array});
+  botPeak = 0
+  botHighPeak = 0
+  midPeak = 0
+  midHighPeak = 0
+  highPeak = 0
 }
