@@ -25,9 +25,6 @@ let findDiff = function(ref, unknown) {
 
   resetParams();
 
-  console.log(lhs.length)
-  console.log(rhs.length)
-
   for ( let i = 0; i < 200; i++ ) {
 
     rhsLowDiff = Math.abs(rhs[i]['measurement'][0] - rhs[i + 1]['measurement'][0]);

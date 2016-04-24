@@ -13,34 +13,33 @@ let compare = document.getElementById('compare')
 let requestMeasurementOne = document.getElementById('request-measurement-one');
 let requestMeasurementTwo = document.getElementById('request-measurement-two');
 
-let id_1 = 257571450
-let id_2 = 257926235
-let id
+let playIdentifySong = document.getElementById('play-identify-song');
+let playImportSong = document.getElementById('play-import-song');
+
+let id, artist, song
 let state
 
-playSongRef.addEventListener('click', function(){
-  id = id_1
-  playSong(id_1);
+playImportSong.addEventListener('click', function(){
+  id = document.getElementById('song-id-import').value;
+  artist = document.getElementById('artist-name').value;
+  song = document.getElementById('song-title').value;
+
+  playSong(id);
+
   state = 'measurementRef'
-  socket.send('songPlay', id_1);
+
+  socket.send('songPlay', id);
 });
 
-playSongUnk.addEventListener('click', function(){
-  id = id_2
-  playSong(id_2);
-  state = 'measurementRef'
-  socket.send('songPlay', id_2);
-});
-
-playSongQuest.addEventListener('click', function(){
-  id = id_1
-  playSong(id_1);
+playIdentifySong.addEventListener('click', function(e){
+  id = document.getElementById('song-id').value;
+  playSong(id);
   state = 'measurementUnk'
-  socket.send('songGuess', id_1);
+  socket.send('songGuess', id);
 });
 
 compare.addEventListener('click', function(){
-  socket.send('findDiff', id_1);
+  socket.send('findDiff', id);
 });
 
 pause.addEventListener('click', function(){
@@ -51,24 +50,14 @@ play.addEventListener('click', function(){
   context.resume();
 });
 
-requestMeasurementOne.addEventListener('click', function(){
-  socket.send('songReport', id_1);
-});
-
-requestMeasurementTwo.addEventListener('click', function(){
-  socket.send('songReport', id_2);
-});
-
 socket.on('usersConnected', function (count) {
   connectionCount.innerText = 'Connected Users: ' + count;
 });
 
-socket.on('songReport', function (measurements) {
-  measurementDisplay.innerText = measurements
-  console.log(measurements);
-});
-
 socket.on('difference', function (diff) {
+  metroMeasure.clearTimer()
+  metroRecordMeasure.clearTimer()
+
   console.log(diff);
 });
 

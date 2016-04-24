@@ -18,7 +18,7 @@ const io = socketIo(server);
 let port = process.env.PORT || 3000;
 
 let simpleStore = {}
-let tempStore = {}
+let tempStore = []
 
 server.listen(port, function () {
   console.log('Listening on port ' + port + '.');
@@ -34,36 +34,38 @@ io.on('connection', function (socket) {
   });
 
   socket.on('message', function (channel, message) {
+
     if(channel === 'songPlay'){
+
       tick = 0
-      console.log(tick)
       console.log(`Playing song #${message}`);
-      simpleStore[`${message}Ref`] = []
+
+      simpleStore[`${message}`] = []
 
     } else if (channel === 'songGuess'){
       tick2 = 0
-      tempStore[`${message}Unk`] = []
+      console.log(`Playing song #${message}`);
 
     } else if (channel === 'measurementRef'){
+
       if(message[1] !== null){
         tick += 1
-        simpleStore[`${message[0]}Ref`].push({ 'time': tick, 'measurement': message[1], 'id': message[0]});
+        simpleStore[`${message[0]}`].push({ 'time': tick, 'measurement': message[1], 'id': message[0]});
       }
 
     } else if (channel === 'measurementUnk'){
+
       if(message[1] !== null){
         tick2 += 1
-        tempStore[`${message[0]}Unk`].push({ 'time': tick2, 'measurement': message[1]});
+        tempStore.push({ 'time': tick2, 'measurement': message[1]});
       }
 
     } else if (channel === 'findDiff'){
 
       let songRefs = loDash.values(simpleStore)
 
-      console.log(songRefs)
-
       let song = songRefs.filter(function(songRef){
-        let min = loDash.min(analyze(songRef, tempStore[`${message}Unk`]))
+        let min = loDash.min(analyze(songRef, tempStore))
         return (min < 1) && (min > -1)
       });
 

@@ -1,22 +1,55 @@
 <!doctype html>
 <html>
-  <head>
-    <title>Mix-Cake</title>
-  </head>
-  <body>
-    <h1>Welcome to Mix-Cake</h1>
-    <div id="connection-count"></div>
-    <div id="measurements"></div>
-    <button id="play-song-one">Play Song Ref</button>
-    <button id="play-song-two">Play Song Diff</button>
-    <button id="play-song-question">Play Song Question</button>
-    <button id="compare">Compare</button>
-    <button id="pause">Pause</button>
-    <button id="play">Play</button>
-    <button id="request-measurement-one">Request Measurement One</button>
-    <button id="request-measurement-two">Request Measurement Two</button>
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="/client.js"></script>
-    <script src="bundle.js"></script>
-  </body>
+<head>
+  <title>Mix-Cake</title>
+</head>
+<body>
+  <h1>Welcome to Mix-Cake</h1>
+
+  <div id="connection-count"></div>
+  <div id="measurements"></div>
+
+  </br>
+
+  <form>
+    <h2>Identify a Song</h2>
+    <div class="form-group">
+      <label for="song-id">Soundcloud song ID</label>
+      <input type="integer" class="form-control" id="song-id" placeholder="123455">
+    </div>
+  </form>
+  <button class="btn btn-default" id="play-identify-song">Submit</button>
+
+  <form>
+    <h2>Import a Song</h2>
+    <div class="form-group">
+      <label for="song-id">Soundcloud song ID</label>
+      <input type="integer" class="form-control" id="song-id-import" placeholder="123455">
+      <label for="song-artist"></label>
+      <input type="text" class="form-control" id="artist-name" placeholder="Coldplay">
+      <label for="song name"></label>
+      <input type="text" class="form-control" id="song-title" placeholder="Clocks">
+    </div>
+  </form>
+  <button class="btn btn-default" id="play-import-song">Submit</button>
+
+  </br>
+  </br>
+  </br>
+
+  <button id="play-song-one">Play Song Ref</button>
+  <button id="play-song-two">Play Song Diff</button>
+  <button id="play-song-question">Play Song Question</button>
+  <button id="compare">Compare</button>
+  <button id="pause">Pause</button>
+  <button id="play">Play</button>
+  <button id="request-measurement-one">Request Measurement One</button>
+  <button id="request-measurement-two">Request Measurement Two</button>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/client.js"></script>
+  <script src="bundle.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css">
+  <link rel="stylesheet" href="style.css" type="text/css">
+</body>
 </html>
