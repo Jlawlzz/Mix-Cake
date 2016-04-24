@@ -22,14 +22,15 @@ Store.prototype.updateTemp = function(message){
 Store.prototype.logTemp = function(id){
   if (this.currentSong !== null) {
     this.prevSong = this.currentSong
-    client.set(`'${this.currentSong}'`, JSON.stringify(this.tempStore[`${this.currentSong}`]), function(err, reply) {
-      console.log(reply)
-    })
+    client.hmset("fft", `'${this.currentSong}'`, JSON.stringify(this.tempStore[`${this.currentSong}`]),
+                 function(err, reply) {
+                   console.log(reply)
+                 })
   }
 }
 
 Store.prototype.seeStore = function(){
-  client.keys('*', function(err, reply) {
+  client.hgetall('fft', function(err, reply) {
     console.log(reply)
   })
 }
