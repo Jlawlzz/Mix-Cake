@@ -46,6 +46,8 @@ io.on('connection', function (socket) {
     } else if (channel === 'storeSong'){
       console.log('store')
       store.logTemp()
+    } else if (channel === 'seeStore'){
+      store.seeStore()
     }
   });
 });
