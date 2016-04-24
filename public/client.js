@@ -7,7 +7,7 @@ let searchBar = document.getElementById('search-bar');
 let searchButton = document.getElementById('search-button');
 let searchResults = document.getElementById('search-results');
 
-let song
+let song, songChild, button
 
 searchButton.addEventListener('click', function(){
   let searchVal = searchBar.value;
@@ -19,13 +19,18 @@ socket.on('usersConnected', function (count) {
 });
 
 socket.on('searchResult', function(response){
-    console.log(response);
-  });
-
-
+    JSON.parse(response).forEach(function(songParams){
+      songChild = document.createElement('div');
+      songChild.innerHTML = '<h3>' + songParams.id + '</h3>' + '</br>' + '<button id="button' + songParams.id + '">play</button>'
+      searchResults.appendChild(songChild);
+      button = document.getElementById('button' + songParams.id);
+      button.addEventListener('click', function(){
+        socket.send('playSong', songParams.id);
+        console.log(songParams.id);
+      });
+    });
+});
 
 let Song = function(options) {
-};
-
-Song.prototype.getHTML = function() {
+  this.id = options.id;
 };
