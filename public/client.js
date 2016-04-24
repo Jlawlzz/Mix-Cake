@@ -4,26 +4,61 @@ let socket = io();
 
 let connectionCount = document.getElementById('connection-count');
 let measurementDisplay = document.getElementById('measurements');
-let playSongBut = document.getElementById('play-song');
-let requestMeasurement = document.getElementById('request-measurement');
+let playSongRef = document.getElementById('play-song-one');
+let playSongUnk = document.getElementById('play-song-two');
+let playSongQuest = document.getElementById('play-song-question');
+let pause = document.getElementById('pause');
+let play = document.getElementById('play');
+let compare = document.getElementById('compare')
+let requestMeasurementOne = document.getElementById('request-measurement-one');
+let requestMeasurementTwo = document.getElementById('request-measurement-two');
 
-let id = 257571450
+let playIdentifySong = document.getElementById('play-identify-song');
+let playImportSong = document.getElementById('play-import-song');
 
-playSongBut.addEventListener('click', function(){
+let id, artist, song
+let state
+
+playImportSong.addEventListener('click', function(){
+  id = document.getElementById('song-id-import').value;
+  artist = document.getElementById('artist-name').value;
+  song = document.getElementById('song-title').value;
+
   playSong(id);
+
+  state = 'measurementRef'
+
   socket.send('songPlay', id);
 });
 
-requestMeasurement.addEventListener('click', function(){
-  socket.send('songReport', id);
+playIdentifySong.addEventListener('click', function(e){
+  id = document.getElementById('song-id').value;
+  playSong(id);
+  state = 'measurementUnk'
+  socket.send('songGuess', id);
+});
+
+compare.addEventListener('click', function(){
+  socket.send('findDiff', id);
+});
+
+pause.addEventListener('click', function(){
+  context.suspend();
+});
+
+play.addEventListener('click', function(){
+  context.resume();
 });
 
 socket.on('usersConnected', function (count) {
   connectionCount.innerText = 'Connected Users: ' + count;
 });
 
-socket.on('songReport', function (measurements) {
-  measurementDisplay.innerText = measurements
+socket.on('difference', function (diff) {
+  metroMeasure.clearTimer()
+  metroRecordMeasure.clearTimer()
+
+  console.log(diff);
 });
 
 let audio, analyser, source, url;
@@ -40,7 +75,7 @@ let playSong = function(trackID){
   setupStream();
   source.mediaElement.play();
   let metroMeasure = setInterval(takeMeasurement, 1);
-  let metroRecordMeasure = setInterval(recordMeasurement, 50);
+  let metroRecordMeasure = setInterval(recordMeasurement, 20);
 }
 
 let botPeak, botHighPeak, midPeak, midHighPeak, highPeak, dataArray, bufferLength;
@@ -106,7 +141,7 @@ let takeMeasurement = function(){
 }
 
 let recordMeasurement = function(){
-  socket.send('measurement', [id, array]);
+  socket.send(state, [id, array]);
   botPeak = 0
   botHighPeak = 0
   midPeak = 0
