@@ -5,8 +5,20 @@
   </head>
   <body>
     <h1>Welcome to Mix-Cake</h1>
+    </br>
     <div id="connection-count"></div>
-    <button class="btn" id="play-song">Play Song</button>
+    </br>
+
+    <div id="search">
+      <input type="text" class="form-control" id="search-bar" placeholder="search">
+      </br>
+      <button class="btn" id="search-button">search soundcloud</button>
+    </div>
+
+    <div id="search-results">
+      
+    </div>
+
     <script src="/socket.io/socket.io.js"></script>
     <script src="/client.js"></script>
     <script src="bundle.js"></script>

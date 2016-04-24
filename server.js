@@ -4,6 +4,8 @@ const http = require('http');
 const express = require('express');
 const app = express();
 
+const SoundCloudHelper = require('./soundcloud-helper');
+
 app.use(express.static('public'));
 
 let server = http.createServer(app);
@@ -24,6 +26,13 @@ io.on('connection', function (socket) {
 
   socket.on('disconnect', function () {
     console.log('A user has disconnected.', io.engine.clientsCount);
+  });
+
+  socket.on('message', function(channel, message) {
+    if (channel === 'songSearch'){
+      let response = SoundCloudHelper.search(message);
+      socket.emit('searchResult', response)
+    }
   });
 });
 
