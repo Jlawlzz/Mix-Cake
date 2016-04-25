@@ -3,6 +3,7 @@
   <head>
     <title>Mix-Cake</title>
   </head>
+  <script src="bundle.js"></script>
   <body>
     <h1>Welcome to Mix-Cake</h1>
     </br>
@@ -11,7 +12,17 @@
     <div id="connection-count"></div>
     </br>
 
+    <h1>Identify A Song</h1>
+    <div id="identify">
+      <input type="integer" class="form-control" id="identify-bar" placeholder="12345678">
+      </br>
+      <button class="btn" id="identify-button"> enter soundcloud id </button>
+      </br>
+      </br>
+    </div>
+
     <div id="search">
+      <h1>Play A Song</h1>
       <input type="text" class="form-control" id="search-bar" placeholder="search">
       </br>
       <button class="btn" id="search-button">search soundcloud</button>
@@ -27,7 +38,6 @@
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="/client.js"></script>
-    <script src="bundle.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css">
     <link rel="stylesheet" href="style.css" type="text/css">
   </body>
