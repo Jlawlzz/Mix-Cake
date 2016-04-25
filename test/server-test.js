@@ -38,7 +38,7 @@ describe('Server', () => {
       this.request.get('/', (error, response) => {
         if (error) { done(error); }
           assert(response.body.includes("Mix-Cake"),
-           `"${response.body}" does not include "Mix-Cake".`);
+           `"${response.body}" does not have "Mix-Cake".`);
           done();
       });
     });
