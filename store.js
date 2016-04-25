@@ -33,7 +33,7 @@ client.on('connect', function() {
 });
 
 let getFingerprints = function(solidStore){
-  client.hgetall('FFTfingerprints3', function(err, reply) {
+  client.hgetall('FFTprints', function(err, reply) {
     Object.keys(reply).forEach(function (key) {
       solidStore.push([key, reply[key]])
     })
@@ -62,7 +62,7 @@ let tempStoreAtRange = function(message, store){
 }
 
 let saveIntoMem = function(store){
-  client.hmset("FFTfingerprints3", JSON.stringify(`${store.currentSong}`),
+  client.hmset("FFTprints", JSON.stringify(`${store.currentSong}`),
                                    JSON.stringify(store.tempStore[`${store.currentSong}`]),
                function(err, reply) {
                  console.log(reply)
