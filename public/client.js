@@ -12,20 +12,20 @@ let searchResults = document.getElementById('search-results');
 let recentlyPlayed = document.getElementById('recently-played');
 let pauseButton = document.getElementById('pause-btn');
 let playButton = document.getElementById('play-btn');
-let context = new webkitAudioContext()
+let context = new webkitAudioContext();
 
 let array = null;
-let botFreq = 0
-let botHighFreq = 0
-let midFreq = 0
-let midHighFreq = 0
-let highFreq = 0
+let botFreq = 0;
+let botHighFreq = 0;
+let midFreq = 0;
+let midHighFreq = 0;
+let highFreq = 0;
 
 let song, songChild, button, state, id,
     audio, source, analyser, url,
     bufferLength, dataArray, botPeak,
     botHighPeak, midPeak, midHighPeak,
-    highPeak, title
+    highPeak, title;
 
 searchButton.addEventListener('click', function(){
   let searchVal = searchBar.value;
@@ -43,11 +43,11 @@ playButton.addEventListener('click', function(){
 });
 
 identifyButton.addEventListener('click', function(){
-  socket.send('identifySong')
+  socket.send('identifySong');
 });
 
 socket.on('startIdProcess', function() {
-  state = 'logIdentify'
+  state = 'logIdentify';
   FFTAnalyze.resetPeaks();
   FFTAnalyze.cleanArray();
   AudioControl.playSong(identifyBar.value)
@@ -58,19 +58,19 @@ socket.on('usersConnected', function (count) {
 });
 
 socket.on('newPlay', function (message) {
-  setHTML.appendRecentlyPlayed(message)
+  setHTML.appendRecentlyPlayed(message);
 });
 
 socket.on('searchResult', function(response){
-  searchResults.innerHTML = ''
+  searchResults.innerHTML = '';
   JSON.parse(response).forEach(function(songParams){
-    setHTML.appendSearchResults(songParams)
+    setHTML.appendSearchResults(songParams);
   });
 });
 
 socket.on('match', function(response){
-  title = JSON.parse(response).title
-  identifiedSong.innerHTML = '<h2>' + title + '</h2>'
+  title = JSON.parse(response).title;
+  identifiedSong.innerHTML = '<h2>' + title + '</h2>';
 });
 
 let setHTML = {
@@ -83,10 +83,10 @@ let setHTML = {
     button.addEventListener('click', function(){
       FFTAnalyze.resetPeaks();
       FFTAnalyze.cleanArray();
-      socket.send('storeSong')
+      socket.send('storeSong');
       socket.send('playSong', songParams);
       AudioControl.playSong(songParams.id);
-      state = 'logPlay'
+      state = 'logPlay';
     });
   },
 
@@ -103,34 +103,38 @@ let setHTML = {
     });
   }
 
-}
+};
 
 let HTMLStore = {
 
   getSearchSongEl(songParams){
-    return '<div class="song-item row"><h5>' + songParams.title + '</h5>' + '<button class="play-button btn btn-success" id="button' + songParams.id + '">play now</button></div>' + '</br>'
+    return '<div class="song-item row"><h5>' + songParams.title + '</h5>' +
+           '<button class="play-button btn btn-success" id="button' +
+           songParams.id + '">play now</button></div>' + '</br>';
   },
 
   getRecentSongEl(songParams){
-    return '<div class="song-item row"><h5>' + songParams.title + '</h5>' + '<button class="play-button btn btn-success" id="buttonRecent' + songParams.id + '">play now </button></div>' + '</br>'
+    return '<div class="song-item row"><h5>' + songParams.title + '</h5>' +
+           '<button class="play-button btn btn-success" id="buttonRecent' +
+           songParams.id + '">play now </button></div>' + '</br>';
   },
 
-}
+};
 
 let AudioControl = {
 
   playSong(id){
-    this.setContext(id)
-    this.setNodeChain(id)
-    this.setBuffer()
-    this.setInterval()
+    this.setContext(id);
+    this.setNodeChain(id);
+    this.setBuffer();
+    this.setInterval();
   },
 
   setContext(trackID){
-    id = trackID
+    id = trackID;
     if (context != null) {
-      context.close()
-      context = new webkitAudioContext()
+      context.close();
+      context = new webkitAudioContext();
     }
   },
 
@@ -150,7 +154,7 @@ let AudioControl = {
     bufferLength = analyser.frequencyBinCount;
     console.log(bufferLength);
     dataArray = new Uint8Array(bufferLength);
-    FFTAnalyze.resetPeaks()
+    FFTAnalyze.resetPeaks();
   },
 
   setInterval(){
@@ -159,8 +163,8 @@ let AudioControl = {
   },
 
   wipeInterval(){
-    clearInterval(metroMeasure)
-    clearInterval(metroRecordMeasure)
+    clearInterval(metroMeasure);
+    clearInterval(metroRecordMeasure);
   }
 
 }
@@ -169,19 +173,19 @@ let FFTAnalyze = {
 
   recordMeasurement(){
     if (array !== null){ socket.send(state, {'id': id, 'fft': array});}
-    FFTAnalyze.resetPeaks()
+    FFTAnalyze.resetPeaks();
   },
 
   resetPeaks(){
-    botPeak = 0
-    botHighPeak = 0
-    midPeak = 0
-    midHighPeak = 0
-    highPeak = 0
+    botPeak = 0;
+    botHighPeak = 0;
+    midPeak = 0;
+    midHighPeak = 0;
+    highPeak = 0;
   },
 
   cleanArray(){
-    array = null
+    array = null;
   },
 
   takeMeasurement(){
@@ -193,27 +197,27 @@ let FFTAnalyze = {
     midHighFreq = dataArray[300];
     highFreq = dataArray[500];
 
-    botPeak = FFTAnalyze.setFingerPrint(botPeak, botFreq)
-    botHighPeak = FFTAnalyze.setFingerPrint(botHighPeak, botHighFreq)
-    midPeak = FFTAnalyze.setFingerPrint(midPeak, midFreq)
-    midHighPeak = FFTAnalyze.setFingerPrint(midHighPeak, midHighFreq)
-    highPeak = FFTAnalyze.setFingerPrint(highPeak, highFreq)
+    botPeak = FFTAnalyze.setFingerPrint(botPeak, botFreq);
+    botHighPeak = FFTAnalyze.setFingerPrint(botHighPeak, botHighFreq);
+    midPeak = FFTAnalyze.setFingerPrint(midPeak, midFreq);
+    midHighPeak = FFTAnalyze.setFingerPrint(midHighPeak, midHighFreq);
+    highPeak = FFTAnalyze.setFingerPrint(highPeak, highFreq);
 
-    if(array !== null){ FFTAnalyze.setFFTArray() }
+    if(array !== null){ FFTAnalyze.setFFTArray() };
   },
 
   setFingerPrint(peak, freq){
     if ((peak < freq) && (freq != null)){
       if (array === null){ array = 0 };
-      return freq
+      return freq;
     } else {
-      return peak
+      return peak;
     }
   },
 
   setFFTArray(){
-    array = [botPeak, botHighPeak, midPeak, midHighPeak, highPeak]
-    console.log(array)
+    array = [botPeak, botHighPeak, midPeak, midHighPeak, highPeak];
+    console.log(array);
   }
 
 }

@@ -17,8 +17,8 @@ let Router = {
   },
 
   identifySong(store, socket){
-    songMatcher = new SongMatcher()
-    store.getSongs()
+    songMatcher = new SongMatcher();
+    store.getSongs();
     socket.emit('startIdProcess');
   },
 
@@ -30,7 +30,7 @@ let Router = {
     songMatcher.logFFT(message);
     response = songMatcher.assessMatch(store);
 
-    if(response !== null){ SoundCloudHelper.findTrackNameByID(response['id'], socket) }
+    if(response !== null){ SoundCloudHelper.findTrackNameByID(response['id'], socket) };
   }
 }
 

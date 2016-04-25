@@ -5,7 +5,7 @@ const express = require('express');
 const Router = require('./router');
 const app = express();
 const SoundCloudHelper = require('./soundcloud-helper');
-const Store = require('./store')
+const Store = require('./store');
 
 app.use(express.static('public'));
 
@@ -25,7 +25,7 @@ server.listen(port, function () {
 io.on('connection', function (socket) {
 
   console.log('A user has connected.');
-  store = new Store
+  store = new Store;
   io.sockets.emit('usersConnected', io.engine.clientsCount);
 
   socket.on('disconnect', function () {
@@ -40,11 +40,11 @@ io.on('connection', function (socket) {
 
     } else if(channel === 'playSong'){
 
-      Router.playSong(message, store, io)
+      Router.playSong(message, store, io);
 
     } else if(channel === 'identifySong'){
 
-      Router.identifySong(store, socket)
+      Router.identifySong(store, socket);
 
     } else if (channel === 'logPlay'){
 
@@ -52,7 +52,7 @@ io.on('connection', function (socket) {
 
     } else if (channel === 'logIdentify'){
 
-      Router.logIdentify(message, store, socket)
+      Router.logIdentify(message, store, socket);
 
     }
   });

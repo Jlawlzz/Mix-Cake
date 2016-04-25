@@ -11,65 +11,66 @@ if (process.env.REDISTOGO_URL) {
 }
 
 let Store = function(){
-  this.tempStore = {}
-  this.solidStore = []
-  this.currentSong = null
-}
+  this.tempStore = {};
+  this.solidStore = [];
+  this.currentSong = null;
+};
 
 Store.prototype.initTemp = function(id){
-  this.tempStore[`${id}`] = []
-  this.currentSong = id
-}
+  this.tempStore[`${id}`] = [];
+  this.currentSong = id;
+};
 
 Store.prototype.updateTemp = function(message){
-  saveTempStore(message, this)
-}
+  saveTempStore(message, this);
+};
 
 Store.prototype.logTemp = function(id){
   if (this.currentSong !== null) {
     saveIntoMem(this);
   }
-}
+};
 
 Store.prototype.getSongs = function(){
   getFingerprints(this.solidStore);
-}
+};
 
 let getFingerprints = function(solidStore){
   client.hgetall('FFTprints', function(err, reply) {
     Object.keys(reply).forEach(function (key) {
-      solidStore.push([key, reply[key]])
-    })
-  })
-}
+      solidStore.push([key, reply[key]]);
+    });
+  });
+};
 
 let saveTempStore = function(message, store){
 
   if (tempStoreInRange(message, store)){
-      store.tempStore[`${message['id']}`].push(message['fft'])
+      store.tempStore[`${message['id']}`].push(message['fft']);
 
   } else if (tempStoreAtRange(message, store)) {
-    console.log('bang')
-    store.logTemp()
-    store.tempStore[`${message['id']}`].push(message['fft'])
+    console.log('bang');
+    store.logTemp();
+    store.tempStore[`${message['id']}`].push(message['fft']);
 
   }
-}
+};
 
 let tempStoreInRange = function(message, store){
-  return ((store.tempStore[`${message['id']}`].length < 201) && (message['fft'] !== null))
-}
+  return ((store.tempStore[`${message['id']}`].length < 201) && (message['fft'] !== null));
+};
 
 let tempStoreAtRange = function(message, store){
-  return (store.tempStore[`${message['id']}`].length === 201)
-}
+  return (store.tempStore[`${message['id']}`].length === 201);
+};
 
 let saveIntoMem = function(store){
   client.hmset("FFTprints", JSON.stringify(`${store.currentSong}`),
-                                   JSON.stringify(store.tempStore[`${store.currentSong}`]),
+                            JSON.stringify(store.tempStore[`${store.currentSong}`]),
                function(err, reply) {
-                 console.log(reply)
-               })
-}
+                 console.log(reply);
+               });
+};
+
 
 module.exports = Store;

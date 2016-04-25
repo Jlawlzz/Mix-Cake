@@ -2,39 +2,39 @@
 
 let lhsLowDiff, lhsLowMedDiff, lhsMedDiff, lhsHighMedDiff, lhsHighDiff,
     rhsLowDiff, rhsLowMedDiff, rhsMedDiff, rhsHighMedDiff, rhsHighDiff,
-    lowDiffTotal, lowMedDiffTotal, medDiffTotal, highMedDiffTotal, highDiffTotal
+    lowDiffTotal, lowMedDiffTotal, medDiffTotal, highMedDiffTotal, highDiffTotal;
 
 let resetParams = function(){
-  lowDiffTotal = 0
-  lowMedDiffTotal = 0
-  medDiffTotal = 0
-  highMedDiffTotal = 0
-  highDiffTotal = 0
+  lowDiffTotal = 0;
+  lowMedDiffTotal = 0;
+  medDiffTotal = 0;
+  highMedDiffTotal = 0;
+  highDiffTotal = 0;
 }
 
 let findDiff = function(ref, unknown) {
 
-  let lhs = JSON.parse(ref[1])
-  let id = JSON.parse(ref[0])
-  let rhs = unknown
-  let lhsDiff = []
-  let rhsDiff = []
+  let lhs = JSON.parse(ref[1]);
+  let id = JSON.parse(ref[0]);
+  let rhs = unknown;
+  let lhsDiff = [];
+  let rhsDiff = [];
 
   resetParams();
 
   for ( let i = 0; i < 200; i++ ) {
 
-    findRHSDiff(rhs, i)
+    findRHSDiff(rhs, i);
 
-    findLHSDiff(lhs, i)
+    findLHSDiff(lhs, i);
 
-    findTotalDiff()
+    findTotalDiff();
   };
 
-  let avgDiff = findAvgDiffs()
-  console.log(id)
-  console.log(avgDiff)
-  return {'id': id, 'diff': avgDiff}
+  let avgDiff = findAvgDiffs();
+  console.log(id);
+  console.log(avgDiff);
+  return {'id': id, 'diff': avgDiff};
 }
 
 let findRHSDiff = function(rhs, i){
@@ -67,11 +67,11 @@ let findAvgDiffs = function(){
                   ((medDiffTotal)/200),
                   ((highMedDiffTotal)/200),
                   ((highDiffTotal)/200)];
-  let diff = 0
+  let diff = 0;
   results.forEach(function(result){
-    diff += Math.abs(result)
+    diff += Math.abs(result);
   })
-  return diff
+  return diff;
 }
 
 module.exports = findDiff;
