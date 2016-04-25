@@ -5,7 +5,7 @@ let client;
 if (process.env.REDISTOGO_URL) {
   let rtg = require("url").parse(process.env.REDISTOGO_URL);
   client = require("redis").createClient(rtg.port, rtg.hostname);
-  redis.auth(rtg.auth.split(":")[1]);
+  client.auth(rtg.auth.split(":")[1]);
 } else {
   client = require("redis").createClient();
 }
