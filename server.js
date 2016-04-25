@@ -2,13 +2,9 @@
 
 const http = require('http');
 const express = require('express');
-
+const Router = require('./router');
 const app = express();
-const loDash = require('lodash');
-
 const SoundCloudHelper = require('./soundcloud-helper');
-const SongMatcher = require('./song-matcher');
-
 const Store = require('./store')
 
 app.use(express.static('public'));
@@ -20,16 +16,16 @@ const io = socketIo(server);
 
 let port = process.env.PORT || 3000;
 
-let store, songMatcher, response;
+let store;
 
 server.listen(port, function () {
   console.log('Listening on port ' + port + '.');
 });
 
 io.on('connection', function (socket) {
+
   console.log('A user has connected.');
   store = new Store
-
   io.sockets.emit('usersConnected', io.engine.clientsCount);
 
   socket.on('disconnect', function () {
@@ -37,32 +33,27 @@ io.on('connection', function (socket) {
   });
 
   socket.on('message', function(channel, message) {
+
     if (channel === 'songSearch'){
-      SoundCloudHelper.search(message, socket);
+
+      Router.songSearch(message, socket);
 
     } else if(channel === 'playSong'){
-      store.initTemp(message.id);
-      io.sockets.emit('newPlay', message);
+
+      Router.playSong(message, store, io)
 
     } else if(channel === 'identifySong'){
-      songMatcher = new SongMatcher()
-      store.getSongs()
-      socket.emit('startIdProcess');
+
+      Router.identifySong(store, socket)
 
     } else if (channel === 'logPlay'){
-      store.updateTemp(message);
+
+      Router.logPlay(store, message);
 
     } else if (channel === 'logIdentify'){
-      songMatcher.logFFT(message);
-      response = songMatcher.assessMatch(store);
 
-      if(response !== null){ SoundCloudHelper.findTrackNameByID(response['id'], socket) }
+      Router.logIdentify(message, store, socket)
 
-    } else if (channel === 'storeSong'){
-      store.logTemp()
-
-    } else if (channel === 'seeStore'){
-      store.getSongs()
     }
   });
 });
