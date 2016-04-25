@@ -5,6 +5,8 @@ let socket = io();
 let connectionCount = document.getElementById('connection-count');
 let searchBar = document.getElementById('search-bar');
 let searchButton = document.getElementById('search-button');
+let identifyButton = document.getElementById('identify-button');
+let identifyBar = document.getElementById('identify-bar');
 let seeStoreButton = document.getElementById('see-store-button');
 let searchResults = document.getElementById('search-results');
 let recentlyPlayed = document.getElementById('recently-played');
@@ -20,6 +22,15 @@ seeStoreButton.addEventListener('click', function(){
   socket.send('seeStore');
 });
 
+identifyButton.addEventListener('click', function(){
+  socket.send('identifySong')
+});
+
+socket.on('startIdProcess', function() {
+  state = 'logIdentify'
+  playSong(identifyBar.value)
+})
+
 socket.on('usersConnected', function (count) {
   connectionCount.innerText = 'Current Listeners: ' + count;
 });
@@ -29,10 +40,15 @@ socket.on('newPlay', function (message) {
 });
 
 socket.on('searchResult', function(response){
-    JSON.parse(response).forEach(function(songParams){
-      appendSearchResult(songParams);
-    });
+  JSON.parse(response).forEach(function(songParams){
+    appendSearchResult(songParams);
+  });
 });
+
+socket.on('match', function(response){
+  console.log(response);
+});
+
 
 function appendSearchResult(songParams){
   songChild = document.createElement('div');
@@ -40,10 +56,11 @@ function appendSearchResult(songParams){
   searchResults.appendChild(songChild);
   button = document.getElementById('button' + songParams.id);
   button.addEventListener('click', function(){
+    resetPeaks();
     socket.send('storeSong')
     socket.send('playSong', songParams);
     playSong(songParams.id);
-    state = 'log'
+    state = 'logPlay'
   });
 }
 
@@ -53,20 +70,28 @@ function appendRecentlyPlayed(songParams){
   recentlyPlayed.appendChild(songChild);
   button = document.getElementById('buttonRecent' + songParams.id);
   button.addEventListener('click', function(){
+    resetPeaks();
     playSong(songParams.id);
-    state = 'log'
+    state = 'logPlay'
   });
 }
 
-let audio, source, analyser, url, bufferLength, dataArray, botPeak, botHighPeak, midPeak, midHighPeak, highPeak;
+let audio, source, analyser, url,
+    bufferLength, dataArray, botPeak,
+    botHighPeak, midPeak, midHighPeak,
+    highPeak
+
 let context = new webkitAudioContext()
 
 let playSong = function(trackID){
+
   if (context != null) {
     context.close()
     context = new webkitAudioContext()
   }
+
   id = trackID
+
   audio = new Audio(), source, url = 'http://api.soundcloud.com/tracks/' + trackID + '/stream' + '?client_id=e6cec03e9db1f86a994857320fa6b7e3';
   audio.crossOrigin = "anonymous";
   audio.src = url;
@@ -76,6 +101,7 @@ let playSong = function(trackID){
   analyser.connect(context.destination);
   setupStream();
   source.mediaElement.play();
+
   let metroMeasure = setInterval(takeMeasurement, 1);
   let metroRecordMeasure = setInterval(recordMeasurement, 20);
 }
@@ -85,16 +111,9 @@ let setupStream = function(){
   bufferLength = analyser.frequencyBinCount;
   console.log(bufferLength);
   dataArray = new Uint8Array(bufferLength);
-
-  botPeak = 0;
-  botHighPeak = 0;
-  midPeak = 0;
-  midHighPeak = 0;
-  highPeak = 0;
 }
 
-
-let array;
+let array = null;
 let botFreq = 0
 let botHighFreq = 0
 let midFreq = 0
@@ -142,10 +161,21 @@ let takeMeasurement = function(){
 }
 
 let recordMeasurement = function(){
-  socket.send(state, {'id': id, 'fft': array});
+  if (array !== null){
+    socket.send(state, {'id': id, 'fft': array});
+  }
   botPeak = 0
   botHighPeak = 0
   midPeak = 0
   midHighPeak = 0
   highPeak = 0
+}
+
+let resetPeaks = function(){
+  botPeak = 0
+  botHighPeak = 0
+  midPeak = 0
+  midHighPeak = 0
+  highPeak = 0
+  array = null
 }

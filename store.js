@@ -5,6 +5,7 @@ let client = redis.createClient();
 
 let Store = function(){
   this.tempStore = {}
+  this.solidStore = []
   this.currentSong = null
 }
 
@@ -14,24 +15,28 @@ Store.prototype.initTemp = function(id){
 }
 
 Store.prototype.updateTemp = function(message){
-  if (message['fft'] !== undefined){
+  if ( message['fft'] !== null ){
     this.tempStore[`${message['id']}`].push(message['fft'])
   }
 }
 
 Store.prototype.logTemp = function(id){
   if (this.currentSong !== null) {
-    this.prevSong = this.currentSong
-    client.hmset("fft", `'${this.currentSong}'`, JSON.stringify(this.tempStore[`${this.currentSong}`]),
+    client.hmset("storeFreq", `'${this.currentSong}'`, JSON.stringify(this.tempStore[`${this.currentSong}`]),
                  function(err, reply) {
                    console.log(reply)
                  })
   }
 }
 
-Store.prototype.seeStore = function(){
-  client.hgetall('fft', function(err, reply) {
-    console.log(reply)
+Store.prototype.getSongs = function(){
+
+  let sStore = this.solidStore
+
+  client.hgetall('storeFreq', function(err, reply) {
+    Object.keys(reply).forEach(function (key) {
+      sStore.push([key, reply[key]])
+    })
   })
 }
 

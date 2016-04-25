@@ -7,6 +7,7 @@ const app = express();
 const loDash = require('lodash');
 
 const SoundCloudHelper = require('./soundcloud-helper');
+const SongMatcher = require('./song-matcher');
 
 const Store = require('./store')
 
@@ -19,7 +20,7 @@ const io = socketIo(server);
 
 let port = process.env.PORT || 3000;
 
-let store;
+let store, songMatcher, response;
 
 server.listen(port, function () {
   console.log('Listening on port ' + port + '.');
@@ -38,16 +39,30 @@ io.on('connection', function (socket) {
   socket.on('message', function(channel, message) {
     if (channel === 'songSearch'){
       SoundCloudHelper.search(message, socket);
+
     } else if(channel === 'playSong'){
       store.initTemp(message.id);
       io.sockets.emit('newPlay', message);
-    } else if (channel === 'log'){
+
+    } else if(channel === 'identifySong'){
+      songMatcher = new SongMatcher()
+      store.getSongs()
+      socket.emit('startIdProcess');
+
+    } else if (channel === 'logPlay'){
       store.updateTemp(message);
+
+    } else if (channel === 'logIdentify'){
+      songMatcher.logFFT(message);
+      response = songMatcher.assessMatch(store);
+
+      if(response !== null){ socket.emit('match', response)}
+      
     } else if (channel === 'storeSong'){
-      console.log('store')
       store.logTemp()
+
     } else if (channel === 'seeStore'){
-      store.seeStore()
+      store.getSongs()
     }
   });
 });
