@@ -1,0 +1,48 @@
+body{
+  background-image: url('http://loudernet.com/wp-content/uploads/2013/07/skate-music-concert-noise-jpg-10189227-dark.png') ;
+  color: white;
+}
+
+.form-basic {
+  text-align: center;
+  margin: auto;
+  width: 50%;
+}
+
+.search-results{
+  width: 50%;
+  margin: auto;
+}
+
+.title {
+  text-align: center;
+  font-size: 100px;
+  margin-top: 10vh;
+}
+
+.feed {
+  padding-right:0px;
+}
+
+.play-button {
+  margin-top: 1vh;
+}
+
+.song-item {
+  margin-top: 3vh;
+}
+
+.connections {
+  font-size: 30px;
+  margin-top: 3vh;
+  text-align: center;
+}
+
+.controls {
+  margin: auto;
+  width: 30%;
+}
+
+.control-btn {
+  margin-left: 15px;
+}

@@ -5,12 +5,13 @@ let socket = io();
 let connectionCount = document.getElementById('connection-count');
 let searchBar = document.getElementById('search-bar');
 let searchButton = document.getElementById('search-button');
-let identifyDiv = document.getElementById('identify');
+let identifiedSong = document.getElementById('identified-song');
 let identifyButton = document.getElementById('identify-button');
 let identifyBar = document.getElementById('identify-bar');
-let seeStoreButton = document.getElementById('see-store-button');
 let searchResults = document.getElementById('search-results');
 let recentlyPlayed = document.getElementById('recently-played');
+let pauseButton = document.getElementById('pause-btn');
+let playButton = document.getElementById('play-btn');
 let context = new webkitAudioContext()
 
 let array = null;
@@ -31,8 +32,14 @@ searchButton.addEventListener('click', function(){
   socket.send('songSearch', searchVal);
 });
 
-seeStoreButton.addEventListener('click', function(){
-  socket.send('seeStore');
+pauseButton.addEventListener('click', function(){
+  context.suspend();
+  AudioControl.wipeInterval();
+});
+
+playButton.addEventListener('click', function(){
+  context.resume();
+  AudioControl.setInterval();
 });
 
 identifyButton.addEventListener('click', function(){
@@ -55,6 +62,7 @@ socket.on('newPlay', function (message) {
 });
 
 socket.on('searchResult', function(response){
+  searchResults.innerHTML = ''
   JSON.parse(response).forEach(function(songParams){
     setHTML.appendSearchResults(songParams)
   });
@@ -62,7 +70,7 @@ socket.on('searchResult', function(response){
 
 socket.on('match', function(response){
   title = JSON.parse(response).title
-  identifyDiv.innerHTML = '<h2>' + title + '</h2>'
+  identifiedSong.innerHTML = '<h2>' + title + '</h2>'
 });
 
 let setHTML = {
@@ -100,11 +108,11 @@ let setHTML = {
 let HTMLStore = {
 
   getSearchSongEl(songParams){
-    return '<h5>' + songParams.title + '</h5>' + '<button id="button' + songParams.id + '">play</button>' + '</br>'
+    return '<div class="song-item row"><h5>' + songParams.title + '</h5>' + '<button class="play-button btn btn-success" id="button' + songParams.id + '">play now</button></div>' + '</br>'
   },
 
   getRecentSongEl(songParams){
-    return '<h5>' + songParams.title + '</h5>' + '<button id="buttonRecent' + songParams.id + '">play</button>' + '</br>'
+    return '<div class="song-item row"><h5>' + songParams.title + '</h5>' + '<button class="play-button btn btn-success" id="buttonRecent' + songParams.id + '">play now </button></div>' + '</br>'
   },
 
 }
@@ -190,7 +198,7 @@ let FFTAnalyze = {
     midPeak = FFTAnalyze.setFingerPrint(midPeak, midFreq)
     midHighPeak = FFTAnalyze.setFingerPrint(midHighPeak, midHighFreq)
     highPeak = FFTAnalyze.setFingerPrint(highPeak, highFreq)
-    
+
     if(array !== null){ FFTAnalyze.setFFTArray() }
   },
 

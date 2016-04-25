@@ -1,43 +1,61 @@
 <!doctype html>
 <html>
-  <head>
-    <title>Mix-Cake</title>
-  </head>
-  <body>
-    <h1>Welcome to Mix-Cake</h1>
-    </br>
-    <button class="btn" id="see-store-button">see store</button>
+<head>
+  <title>Mix-Cake</title>
+</head>
+<body>
 
-    <div id="connection-count"></div>
-    </br>
+  <h1 class='title'>Mix-Cake</h1>
 
-    <h1>Identify A Song</h1>
+  <div class='connections' id="connection-count"></div>
+  </br>
+</br>
+
+<div class="row">
+  <div class="col-md-6">
+    <div class='controls'>
+      <button class="btn btn-success control-btn" id="pause-btn"> pause || </button>
+      <button class="btn btn-success control-btn" id="play-btn"> play > </button>
+    </div>
     <div id="identify">
-      <input type="integer" class="form-control" id="identify-bar" placeholder="12345678">
-      </br>
-      <button class="btn" id="identify-button"> enter soundcloud id </button>
-      </br>
-      </br>
-    </div>
 
-    <div id="search">
-      <h1>Play A Song</h1>
-      <input type="text" class="form-control" id="search-bar" placeholder="search">
+      <div class="form-basic">
+        <h1>identify a song</h1>
+        <div id='identified-song'>
+        </div>
+        <input type="integer" class="form-control" id="identify-bar" placeholder="12345678">
       </br>
-      <button class="btn" id="search-button">search soundcloud</button>
-    </div>
+      <button class="btn btn-danger" id="identify-button"> enter soundcloud id </button>
+    </br>
+  </br>
+</div>
+</div>
 
-    <div id="search-results">
+<div class="form-basic">
+  <div id="search">
+    <h1>search for a song</h1>
+    <input type="text" class="form-control" id="search-bar" placeholder="search">
+  </br>
+  <button class="btn btn-danger" id="search-button">search soundcloud</button>
+</div>
+</div>
 
-    </div>
+<div id="search-results" class="search-results">
 
+</div>
+</div>
+<div class="col-md-6">
+  <div class='feed'>
     <div id="recently-played">
       <h1>Recently Played</h1>
     </div>
+  </div>
+</div>
+</div>
 
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="/client.js"></script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css">
-    <link rel="stylesheet" href="style.css" type="text/css">
-  </body>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/client.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css">
+<link rel="stylesheet" href="style.css" type="text/css">
+</body>
 </html>
