@@ -15,8 +15,9 @@ let resetParams = function(){
 
 
 let findDiff = function(ref, unknown) {
+
   let lhs = JSON.parse(ref[1])
-  let id = ref[0]
+  let id = JSON.parse(ref[0])
   let rhs = unknown
   let lhsDiff = []
   let rhsDiff = []
@@ -55,7 +56,7 @@ let findDiff = function(ref, unknown) {
     diff += Math.abs(result)
   })
 
-  return {'id': id, 'diff': (diff / 5)}
+  return {'id': id, 'diff': diff}
 }
 
 module.exports = findDiff;

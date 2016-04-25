@@ -5,6 +5,7 @@ let socket = io();
 let connectionCount = document.getElementById('connection-count');
 let searchBar = document.getElementById('search-bar');
 let searchButton = document.getElementById('search-button');
+let identifyDiv = document.getElementById('identify');
 let identifyButton = document.getElementById('identify-button');
 let identifyBar = document.getElementById('identify-bar');
 let seeStoreButton = document.getElementById('see-store-button');
@@ -46,7 +47,8 @@ socket.on('searchResult', function(response){
 });
 
 socket.on('match', function(response){
-  console.log(response);
+  let body = JSON.parse(response).title
+  identifyDiv.innerHTML = '<h2>' + body + '</h2>'
 });
 
 

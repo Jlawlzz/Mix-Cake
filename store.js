@@ -22,7 +22,7 @@ Store.prototype.updateTemp = function(message){
 
 Store.prototype.logTemp = function(id){
   if (this.currentSong !== null) {
-    client.hmset("storeFreq", `'${this.currentSong}'`, JSON.stringify(this.tempStore[`${this.currentSong}`]),
+    client.hmset("randFFT2", JSON.stringify(`${this.currentSong}`), JSON.stringify(this.tempStore[`${this.currentSong}`]),
                  function(err, reply) {
                    console.log(reply)
                  })
@@ -33,7 +33,7 @@ Store.prototype.getSongs = function(){
 
   let sStore = this.solidStore
 
-  client.hgetall('storeFreq', function(err, reply) {
+  client.hgetall('randFFT2', function(err, reply) {
     Object.keys(reply).forEach(function (key) {
       sStore.push([key, reply[key]])
     })

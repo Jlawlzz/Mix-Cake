@@ -1,6 +1,6 @@
 'use strict';
 
-const songAnalysis = require('./songAnalysis');
+const songAnalysis = require('./song-analysis');
 
 let songs, diffs;
 
@@ -24,7 +24,7 @@ SongMatcher.prototype.assessMatch = function(store){
       return songAnalysis(song, fftArray)
     });
 
-    console.log(diffs.sort(function(a, b){ return a['diff'] - b['diff'] })[0])
+    console.log(diffs)
 
     return diffs.sort(function(a, b){ return a['diff'] - b['diff'] })[0];
 

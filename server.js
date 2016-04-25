@@ -56,8 +56,8 @@ io.on('connection', function (socket) {
       songMatcher.logFFT(message);
       response = songMatcher.assessMatch(store);
 
-      if(response !== null){ socket.emit('match', response)}
-      
+      if(response !== null){ SoundCloudHelper.findTrackNameByID(response['id'], socket) }
+
     } else if (channel === 'storeSong'){
       store.logTemp()
 
