@@ -1,7 +1,14 @@
 'use strict';
 
-var redis = require('redis');
-var client = redis.createClient(process.env.REDISCLOUD_URL, {no_ready_check: true});
+let client;
+
+if (process.env.REDISTOGO_URL) {
+  let rtg   = require("url").parse(process.env.REDISTOGO_URL);
+  client = require("redis").createClient(rtg.port, rtg.hostname);
+  redis.auth(rtg.auth.split(":")[1]);
+} else {
+  client = require("redis").createClient();
+}
 
 let Store = function(){
   this.tempStore = {}
@@ -27,10 +34,6 @@ Store.prototype.logTemp = function(id){
 Store.prototype.getSongs = function(){
   getFingerprints(this.solidStore);
 }
-
-client.on('connect', function() {
-    console.log('connected');
-});
 
 let getFingerprints = function(solidStore){
   client.hgetall('FFTprints', function(err, reply) {
