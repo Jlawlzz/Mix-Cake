@@ -1,7 +1,7 @@
 'use strict';
 
-let redis = require('redis');
-let client = redis.createClient();
+var redis = require('redis');
+var client = redis.createClient(process.env.REDISCLOUD_URL, {no_ready_check: true});
 
 let Store = function(){
   this.tempStore = {}
