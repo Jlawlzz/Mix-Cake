@@ -49,7 +49,7 @@ let findLHSDiff = function(lhs, i){
   let cL = 0;
   [lhsLowDiff, lhsLowMedDiff, lhsMedDiff, lhsHighMedDiff, lhsHighDiff].forEach(function(diff){
     cL += 1
-    diff = Math.abs(lhs[i]['fft'][c] - lhs[i + 1]['fft'][c]);
+    diff = Math.abs(lhs[i]['fft'][cL] - lhs[i + 1]['fft'][cL]);
   });
 }
 
