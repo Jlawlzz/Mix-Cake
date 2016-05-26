@@ -152,7 +152,6 @@ let AudioControl = {
   setBuffer(){
     analyser.fftSize = 4096;
     bufferLength = analyser.frequencyBinCount;
-    console.log(bufferLength);
     dataArray = new Uint8Array(bufferLength);
     FFTAnalyze.resetPeaks();
   },
@@ -217,7 +216,6 @@ let FFTAnalyze = {
 
   setFFTArray(){
     array = [botPeak, botHighPeak, midPeak, midHighPeak, highPeak];
-    console.log(array);
   }
 
 }
