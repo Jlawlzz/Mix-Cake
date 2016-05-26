@@ -1,8 +1,8 @@
 'use strict';
 
-let lhsLowDiff, lhsLowMedDiff, lhsMedDiff, lhsHighMedDiff, lhsHighDiff,
-    rhsLowDiff, rhsLowMedDiff, rhsMedDiff, rhsHighMedDiff, rhsHighDiff,
-    lowDiffTotal, lowMedDiffTotal, medDiffTotal, highMedDiffTotal, highDiffTotal;
+let [let lhsLowDiff, let lhsLowMedDiff, let lhsMedDiff, let lhsHighMedDiff, let lhsHighDiff] = lhsDiffs
+let [let rhsLowDiff, let rhsLowMedDiff, let rhsMedDiff, let rhsHighMedDiff, let rhsHighDiff] = rhsDiffs
+let lowDiffTotal, lowMedDiffTotal, medDiffTotal, highMedDiffTotal, highDiffTotal;
 
 let resetParams = function(){
   lowDiffTotal = 0;
@@ -39,7 +39,7 @@ let findDiff = function(ref, unknown) {
 
 let findRHSDiff = function(rhs, i){
   let cR = 0;
-  [rhsLowDiff, rhsLowMedDiff, rhsMedDiff, rhsHighMedDiff, rhsHighDiff].forEach(function(diff){
+  rhsDiffs.forEach(function(diff){
     cR += 1
     diff = Math.abs(rhs[i]['fft'][c] - rhs[i + 1]['fft'][c]);
   });
@@ -47,7 +47,7 @@ let findRHSDiff = function(rhs, i){
 
 let findLHSDiff = function(lhs, i){
   let cL = 0;
-  [lhsLowDiff, lhsLowMedDiff, lhsMedDiff, lhsHighMedDiff, lhsHighDiff].forEach(function(diff){
+  lhsDiffs.forEach(function(diff){
     cL += 1
     diff = Math.abs(lhs[i]['fft'][cL] - lhs[i + 1]['fft'][cL]);
   });
