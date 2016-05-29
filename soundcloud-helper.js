@@ -12,6 +12,7 @@ let SoundCloudHelper = {
       if ( error ) {
         console.log(err);
       } else {
+        console.log(body)
         socket.emit('searchResult', body)
       }
     });
