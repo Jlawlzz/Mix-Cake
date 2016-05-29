@@ -24,13 +24,8 @@ server.listen(port, function () {
 
 io.on('connection', function (socket) {
 
-  console.log('A user has connected.');
   store = new Store;
   io.sockets.emit('usersConnected', io.engine.clientsCount);
-
-  socket.on('disconnect', function () {
-    console.log('A user has disconnected.', io.engine.clientsCount);
-  });
 
   socket.on('message', function(channel, message) {
 

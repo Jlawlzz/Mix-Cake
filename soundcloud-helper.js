@@ -20,8 +20,6 @@ let SoundCloudHelper = {
   findTrackNameByID(songID, socket){
     let id = Number(songID)
 
-    console.log(id)
-
     SC.get('http://api.soundcloud.com/tracks/' + id + '?client_id=e6cec03e9db1f86a994857320fa6b7e3',
            function(error, response, body){
       if ( error ) {

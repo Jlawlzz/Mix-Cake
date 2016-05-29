@@ -21,7 +21,6 @@ let compareFFT = function(fftArray, songs){
     diffs = songs.map( function(song){
       return songAnalysis(song, fftArray);
     });
-    console.log(diffs);
     return diffs.sort(function(a, b){ return a['diff'] - b['diff'] })[0];
   } else {
     return null;
