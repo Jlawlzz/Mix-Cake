@@ -12,27 +12,31 @@ let Router = {
   },
 
   playSong(message, store, io){
+
     store.initTemp(message.id);
     io.sockets.emit('newPlay', message);
   },
 
   identifySong(store, socket){
+
     songMatcher = new SongMatcher();
     store.getSongs();
     socket.emit('startIdProcess');
   },
 
   logPlay(store, message){
+
     store.updateTemp(message);
   },
 
   logIdentify(message, store, socket){
+    
     songMatcher.logFFT(message);
     response = songMatcher.assessMatch(store);
 
     if(response !== null){ SoundCloudHelper.findTrackNameByID(response['id'], socket) };
   }
-  
+
 }
 
 module.exports = Router;
